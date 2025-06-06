@@ -49,5 +49,55 @@ It receives WhatsApp messages via webhook, processes them with an AI model, and 
 
 ---
 
+# 💬 WhatsApp AI Bot (Node.js Version)
+
+This is a local WhatsApp chatbot built using **Node.js** 
+It connects to WhatsApp Web via a QR code and responds with AI-generated messages using OpenAI or OpenRouter.
+
+---
+
+## 🛠 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/whatsapp-ai-agent.git
+cd whatsapp-ai-agent/WhatsApp-Bot
+```
+
+---
+2. Install Dependencies
+   
+```bash
+npm install
+```
+
+✅ First-Time Setup
+When you run the bot for the first time, it will open a QR code in your terminal.
+
+📱 Scan the QR code using your WhatsApp mobile app:
+
+Go to WhatsApp > Linked Devices > Link a Device
+
+Once scanned, the session will be saved inside the tokens/ folder — no need to scan again next time.
+
+🤖 AI Integration
+The AI_Bot.json file contains the AI prompt or personality config
+
+Make sure your bot.js is connected to:
+
+OpenAI API key OR
+
+OpenRouter API key
+
+
+
+🧪 Example Message Flow
+User sends: “Hi, who are you?”
+
+Bot replies: “I'm your friendly AI assistant. How can I help you today?”
+
+
+
 
 
