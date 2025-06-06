@@ -1,0 +1,166 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/whatsapp",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook WhatsApp",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "example-webhook-id",
+      "id": "9a6d50df-37d4-49c5-bc9b-32ca26949ed7"
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $json;\n// Extract the message body and sender information from the incoming payload\nconst messageText = body.body || '';\nconst sender = body.from || '';\n\nreturn [{ message: messageText, from: sender }];"
+      },
+      "name": "Extract Message",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ],
+      "id": "bd2ca527-a097-4b8f-925a-96448b2debf2"
+    },
+    {
+      "parameters": {
+        "functionCode": "const aiReply = $json.text || 'No reply generated';\n\nreturn [{ reply: aiReply }];"
+      },
+      "name": "Return AI Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        0
+      ],
+      "id": "442f96c0-2d07-4ffe-b312-6b344679dbeb"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.body }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an helpful ai companion"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        0
+      ],
+      "id": "0b906a8a-6f8c-4247-9a74-46ef6df82d02",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-pro-exp-03-25:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        480,
+        240
+      ],
+      "id": "5bf32f85-177f-4661-aee8-d4f09336ac84",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={\n  \"reply\": \"={{ $json.reply }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "e8e175b8-fbcc-4a49-b75a-76d0e463128b",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Extract Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Return AI Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return AI Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f9806acd-701b-4a47-8d8d-15e10a68f227",
+  "meta": {
+    "instanceId": "de54a3e044140fba705155dd5a27bd3408743e88d4ab0e9a5cb1e062f648e070"
+  },
+  "id": "JgGp5RczvdjpaYIf",
+  "tags": []
+}
