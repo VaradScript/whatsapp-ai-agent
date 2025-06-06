@@ -1,0 +1,173 @@
+{
+  "name": "AI Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook/whatsapp",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook WhatsApp",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "example-webhook-id",
+      "id": "41639689-45ee-4e9d-9c6c-87d99b28093f"
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $json;\n// Extract the message body and sender information from the incoming payload\nconst messageText = body.body || '';\nconst sender = body.from || '';\n\nreturn [{ message: messageText, from: sender }];"
+      },
+      "name": "Extract Message",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ],
+      "id": "383fca00-421b-49f6-ac52-023e1dc27190"
+    },
+    {
+      "parameters": {
+        "functionCode": "const aiReply = $json.text || 'No reply generated';\n\nreturn [{ reply: aiReply }];"
+      },
+      "name": "Return AI Reply",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        900,
+        0
+      ],
+      "id": "791e52ce-4742-4e32-bfb9-d8f92715da6b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.body }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an helpful ai companion"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        0
+      ],
+      "id": "aa2122fc-d9bd-4c18-9ebb-4505e1d542b0",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-pro-exp-03-25:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        460,
+        160
+      ],
+      "id": "d734549f-5cd5-4712-a391-36f881c9633a",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "lmQsStnMAVBZiYSe",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={\n  \"reply\": \"={{ $json.reply }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "87d41e2b-3432-4394-81ee-d100bfe2dac8",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Extract Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Message": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Return AI Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return AI Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f7f4d267-3251-4d77-8450-af78a57a3acd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dedc19d9bdfc7243f7ee13c48a4edef60ea52cfb037e9ca16e44a41bcd75a2d3"
+  },
+  "id": "3J34OkCBlVchPPQP",
+  "tags": []
+}
