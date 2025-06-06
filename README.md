@@ -18,7 +18,7 @@ It receives WhatsApp messages via webhook, processes them with an AI model, and 
 
 ## 🖼 Workflow Preview
 
-![Workflow Diagram](screenshots/workflow-preview.png)
+![Workflow Diagram](screenshots/wa.png)
 
 ---
 
