@@ -37,11 +37,11 @@ async function processMessage(client, message, isSimulatedSelf = false) {
   }
 }
 
-// --- Venom-bot Initialization ---
+// --- Venom-bot ---
 venom
   .create({
     session: 'ai-agent-session',
-    headless: false, // set to false to show browser for QR scan
+    headless: false, //QR scan
   })
   .then((venomClient) => {
     client = venomClient;
