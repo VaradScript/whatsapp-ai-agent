@@ -21,7 +21,19 @@ It receives WhatsApp messages via webhook, processes them with an AI model, and 
 ![Workflow Diagram](screenshots/wa.png)
 
 ---
+# 🐳 Running n8n Locally with Docker(Install docker software to run the workflow)
 
+You can run n8n locally using Docker with persistent data by mounting your `.n8n` directory.
+
+### 🧱 Docker Command
+
+```bash
+docker run -it --rm -p 5678:5678 -v C:\Users\gamin\.n8n:/home/node/.n8n n8nio/n8n     **add your path
+```
+🚀 Access the Editor
+```bash
+http://localhost:5678
+```
 ## 🔄 Step-by-Step Workflow
 
 1. **Webhook Node (`/webhook/whatsapp`)**
@@ -61,7 +73,7 @@ It connects to WhatsApp Web via a QR code and responds with AI-generated message
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/whatsapp-ai-agent.git
+git clone https://github.com/Varadscript/whatsapp-ai-agent.git
 cd whatsapp-ai-agent/WhatsApp-Bot
 ```
 
@@ -72,6 +84,12 @@ cd whatsapp-ai-agent/WhatsApp-Bot
 npm install
 ```
 
+🚀 Run the WhatsApp Bot
+```bash
+node bot.js
+```
+
+node bot.js
 ✅ First-Time Setup
 When you run the bot for the first time, it will open a QR code in your terminal.
 
