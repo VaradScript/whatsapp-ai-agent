@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 let client;
 
-// --- Function to Process a Message ---
+// ---msg func
 async function processMessage(client, message, isSimulatedSelf = false) {
   console.log("Processing message:", message);
   if (isSimulatedSelf) {
